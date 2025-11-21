@@ -8,11 +8,11 @@ interface JwtPayload {
 }
 
 interface JwtRequest extends Request {
-    email: string;
-    role: string;
+    email?: string;
+    role?: string;
 }
 
-export default function authUser(req: JwtRequest, res: Response, next: NextFunction) {
+export default function userAuth(req: JwtRequest, res: Response, next: NextFunction) {
     try {
         const authHeader = req.headers.authorization
         if (!authHeader) {
