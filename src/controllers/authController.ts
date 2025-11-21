@@ -1,20 +1,7 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 import { UserModel } from '../models/user';
-import { JWT_SECRET_KEY } from '../config/config';
-
-const generateJwt = (email: string, role: string): string => {
-    const payload = {
-        email,
-        role
-    };
-    return jwt.sign(
-        payload,
-        JWT_SECRET_KEY as string, 
-        { expiresIn: "1h" }
-    );
-};
+import { generateJwt } from '../utils/jwt';
 
 export const register = async (req: Request, res: Response) => {
     const {full_name, date_of_birth, email, password, role} = req.body
