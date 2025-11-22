@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
 
-export const generateJwt = (email: string, role: string): string => {
+export const generateJwt = (id: string, role: string): string => {
     const payload = {
-        email,
+        id,
         role
     };
     return jwt.sign(
