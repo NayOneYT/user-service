@@ -26,7 +26,8 @@ export const register = async (req: Request, res: Response) => {
         const token = generateJwt(newUser.email, newUser.role);
         res.status(201).json({ 
             message: "Регистрация прошла успешно.", 
-            token
+            token,
+            ID: newUser._id
         });
     }
     catch (error) {
@@ -52,7 +53,8 @@ export const login = async (req: Request, res: Response) => {
         const token = generateJwt(email, user.role);
         res.status(201).json({
             message: "Авторизация прошла успешно.",
-            token
+            token,
+            ID: user._id
         });
     }
     catch (error) {
