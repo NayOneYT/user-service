@@ -8,11 +8,8 @@ interface JwtRequest extends Request {
 }
 
 export const getUserById = async (req: JwtRequest, res: Response) => {
-    const userId = req.params.id;
-    if (!userId) {
-        return res.status(400).json({ message: "Необходимо указать ID пользователя." });
-    }
     try {
+        const userId = req.params.id;
         const currentUserId = req._id;
         const currentUserRole = req.role;
         if (String(currentUserId) != userId && currentUserRole != "admin") {
@@ -33,6 +30,45 @@ export const getUserById = async (req: JwtRequest, res: Response) => {
     }
     catch (error) {
         console.error("Ошибка при получении пользователя:", error);
+        res.status(500).json({ message: "Внутренняя ошибка сервера." });
+    }
+}
+
+export const getAllUsers = async (req: JwtRequest, res: Response) => {
+    try {
+        const currentUserRole = req.role;
+        if (currentUserRole != "admin") {
+            return res.status(403).json({ message: "Получать всех пользователей могут только админы." });
+        }
+        const users = await UserModel.find({}, { __v: 0 });
+        res.status(201).json(users);
+    }
+    catch (error) {
+        console.error("Ошибка при получении всех пользователей:", error);
+        res.status(500).json({ message: "Внутренняя ошибка сервера." });
+    }
+}
+
+export const blockUserById = async (req: JwtRequest, res: Response) => {
+    try {
+        const userId = req.params.id;
+        const currentUserId = req._id;
+        const currentUserRole = req.role;
+        if (String(currentUserId) != userId && currentUserRole != "admin") {
+            return res.status(403).json({ message: "Вам разрешено заблокировать только самого себя." });
+        }
+        const user = await UserModel.findById(userId)
+        if (!user) {
+            return res.status(409).json({ message: "Пользователя с таким ID не существует." });
+        }
+        if (user.status == "inactive") {
+            return res.status(409).json({ message: `Пользователь с ID ${userId} уже заблокирован.` });
+        }
+        await user.updateOne({ $set: {status: "inactive"} })
+        res.status(201).json({ message: `Пользователь с ID ${userId} успешно заблокирован.` });
+    }
+    catch (error) {
+        console.error("Ошибка при блокировке пользователя:", error);
         res.status(500).json({ message: "Внутренняя ошибка сервера." });
     }
 }

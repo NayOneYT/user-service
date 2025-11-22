@@ -11,6 +11,6 @@ const generateJwt = (_id, role) => {
         _id,
         role
     };
-    return jsonwebtoken_1.default.sign(payload, config_1.JWT_SECRET_KEY, { expiresIn: "1h" });
+    return jsonwebtoken_1.default.sign(payload, config_1.JWT_SECRET_KEY, { expiresIn: "12h" });
 };
 exports.generateJwt = generateJwt;

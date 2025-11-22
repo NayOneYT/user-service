@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { getUserById } from '../controllers/userController';
+import { getUserById, getAllUsers, blockUserById } from '../controllers/userController';
 import userAuth from '../middlewares/userAuth';
 
 const userRouter = Router();
 
 userRouter.get('/:id', userAuth, getUserById);
-userRouter.get('/', () => {}); 
-userRouter.patch('/:id/block', () => {}); 
+userRouter.get('/', userAuth, getAllUsers); 
+userRouter.patch('/:id/block', userAuth, blockUserById); 
 
 export default userRouter;

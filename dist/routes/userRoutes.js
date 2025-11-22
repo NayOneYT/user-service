@@ -8,6 +8,6 @@ const userController_1 = require("../controllers/userController");
 const userAuth_1 = __importDefault(require("../middlewares/userAuth"));
 const userRouter = (0, express_1.Router)();
 userRouter.get('/:id', userAuth_1.default, userController_1.getUserById);
-userRouter.get('/', () => { });
-userRouter.patch('/:id/block', () => { });
+userRouter.get('/', userAuth_1.default, userController_1.getAllUsers);
+userRouter.patch('/:id/block', userAuth_1.default, userController_1.blockUserById);
 exports.default = userRouter;
