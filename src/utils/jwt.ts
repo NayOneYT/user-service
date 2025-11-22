@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../config/config';
+import { ObjectId } from 'mongoose';
 
-export const generateJwt = (id: string, role: string): string => {
+export const generateJwt = (_id: ObjectId, role: string): string => {
     const payload = {
-        id,
+        _id,
         role
     };
     return jwt.sign(
