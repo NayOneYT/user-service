@@ -23,7 +23,7 @@ export const register = async (req: Request, res: Response) => {
             role: userRole
         });
         await newUser.save()
-        const token = generateJwt(newUser.email, newUser.role);
+        const token = generateJwt(newUser._id, newUser.role);
         res.status(201).json({ 
             message: "Регистрация прошла успешно.", 
             token,
@@ -37,24 +37,23 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-    const {email, password} = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ message: "Необходимо заполнить все обязательные поля (email, password)." });
+    const {ID, password} = req.body;
+    if (!ID || !password) {
+        return res.status(400).json({ message: "Необходимо заполнить все обязательные поля (ID, password)." });
     }
     try {
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findById({ ID });
         if (!user) {
-            return res.status(404).json({ message: "Пользователя с таким email не существует." });
+            return res.status(404).json({ message: "Пользователя с таким ID не существует." });
         }
         const isPassValid = await bcrypt.compare(password, user.password)
         if (!isPassValid) {
             return res.status(401).json({ message: "Неверный пароль." });
         }
-        const token = generateJwt(email, user.role);
+        const token = generateJwt(ID, user.role);
         res.status(201).json({
             message: "Авторизация прошла успешно.",
-            token,
-            ID: user._id
+            token
         });
     }
     catch (error) {
