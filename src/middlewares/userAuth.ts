@@ -3,12 +3,12 @@ import jwt from "jsonwebtoken"
 import { JWT_SECRET_KEY } from "../config/config"
 
 interface JwtPayload {
-    email: string;
+    id: string;
     role: string;
 }
 
 interface JwtRequest extends Request {
-    email?: string;
+    id?: string;
     role?: string;
 }
 
@@ -23,7 +23,7 @@ export default function userAuth(req: JwtRequest, res: Response, next: NextFunct
             return res.status(401).json({ message: "Неверный формат заголовка Authorization" })
         }
         const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as JwtPayload
-        req.email = decoded.email;
+        req.id = decoded.id;
         req.role = decoded.role;
         next();
     } 
