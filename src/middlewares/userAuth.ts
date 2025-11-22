@@ -1,15 +1,15 @@
 import type { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET_KEY } from "../config/config"
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 interface JwtPayload {
-    _id: ObjectId;
+    _id: Types.ObjectId;
     role: string;
 }
 
 interface JwtRequest extends Request {
-    _id?: ObjectId;
+    _id?: Types.ObjectId;
     role?: string;
 }
 
