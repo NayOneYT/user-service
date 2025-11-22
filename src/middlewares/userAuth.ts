@@ -1,14 +1,15 @@
 import type { Request, Response, NextFunction } from "express"
 import jwt from "jsonwebtoken"
 import { JWT_SECRET_KEY } from "../config/config"
+import { ObjectId } from "mongoose";
 
 interface JwtPayload {
-    id: string;
+    _id: ObjectId;
     role: string;
 }
 
 interface JwtRequest extends Request {
-    id?: string;
+    _id?: ObjectId;
     role?: string;
 }
 
@@ -23,7 +24,7 @@ export default function userAuth(req: JwtRequest, res: Response, next: NextFunct
             return res.status(401).json({ message: "Неверный формат заголовка Authorization" })
         }
         const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as JwtPayload
-        req.id = decoded.id;
+        req._id = decoded._id;
         req.role = decoded.role;
         next();
     } 
