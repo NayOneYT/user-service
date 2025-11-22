@@ -5,16 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.register = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const user_1 = require("../models/user");
-const config_1 = require("../config/config");
-const generateJwt = (email, role) => {
-    const payload = {
-        email,
-        role
-    };
-    return jsonwebtoken_1.default.sign(payload, config_1.JWT_SECRET_KEY, { expiresIn: "1h" });
-};
+const jwt_1 = require("../utils/jwt");
 const register = async (req, res) => {
     const { full_name, date_of_birth, email, password, role } = req.body;
     if (!full_name || !date_of_birth || !email || !password) {
@@ -35,10 +27,11 @@ const register = async (req, res) => {
             role: userRole
         });
         await newUser.save();
-        const token = generateJwt(newUser.email, newUser.role);
+        const token = (0, jwt_1.generateJwt)(newUser._id, newUser.role);
         res.status(201).json({
             message: "Регистрация прошла успешно.",
-            token
+            token,
+            ID: newUser._id
         });
     }
     catch (error) {
@@ -48,20 +41,20 @@ const register = async (req, res) => {
 };
 exports.register = register;
 const login = async (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ message: "Необходимо заполнить все обязательные поля (email, password)." });
+    const { ID, password } = req.body;
+    if (!ID || !password) {
+        return res.status(400).json({ message: "Необходимо заполнить все обязательные поля (ID, password)." });
     }
     try {
-        const user = await user_1.UserModel.findOne({ email });
+        const user = await user_1.UserModel.findById(ID);
         if (!user) {
-            return res.status(404).json({ message: "Пользователя с таким email не существует." });
+            return res.status(404).json({ message: "Пользователя с таким ID не существует." });
         }
         const isPassValid = await bcryptjs_1.default.compare(password, user.password);
         if (!isPassValid) {
             return res.status(401).json({ message: "Неверный пароль." });
         }
-        const token = generateJwt(email, user.role);
+        const token = (0, jwt_1.generateJwt)(ID, user.role);
         res.status(201).json({
             message: "Авторизация прошла успешно.",
             token

@@ -10,6 +10,6 @@ export const generateJwt = (_id: Types.ObjectId, role: string): string => {
     return jwt.sign(
         payload,
         JWT_SECRET_KEY as string, 
-        { expiresIn: "1h" }
+        { expiresIn: "12h" }
     );
 };

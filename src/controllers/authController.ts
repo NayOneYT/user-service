@@ -42,7 +42,7 @@ export const login = async (req: Request, res: Response) => {
         return res.status(400).json({ message: "Необходимо заполнить все обязательные поля (ID, password)." });
     }
     try {
-        const user = await UserModel.findById({ ID });
+        const user = await UserModel.findById(ID);
         if (!user) {
             return res.status(404).json({ message: "Пользователя с таким ID не существует." });
         }

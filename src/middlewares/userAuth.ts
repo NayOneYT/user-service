@@ -21,7 +21,7 @@ export default function userAuth(req: JwtRequest, res: Response, next: NextFunct
         }
         const token = authHeader.split(" ")[1]
         if (!token) {
-            return res.status(401).json({ message: "Неверный формат заголовка Authorization" })
+            return res.status(401).json({ message: "Неверный формат заголовка Authorization (должен быть 'Bearer токен')." })
         }
         const decoded = jwt.verify(token, JWT_SECRET_KEY as string) as JwtPayload
         req._id = decoded._id;
