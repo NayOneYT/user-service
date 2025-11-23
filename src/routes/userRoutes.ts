@@ -3,9 +3,10 @@ import { getUserById, getAllUsers, blockUserById } from '../controllers/userCont
 import userAuth from '../middlewares/userAuth';
 
 const userRouter = Router();
+userRouter.use(userAuth)
 
-userRouter.get('/:id', userAuth, getUserById);
-userRouter.get('/', userAuth, getAllUsers); 
-userRouter.patch('/:id/block', userAuth, blockUserById); 
+userRouter.get('/:id', getUserById);
+userRouter.get('/', getAllUsers); 
+userRouter.patch('/:id/block', blockUserById); 
 
 export default userRouter;
