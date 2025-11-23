@@ -23,7 +23,7 @@ export const register = async (req: Request, res: Response) => {
             role: userRole
         });
         await newUser.save()
-        const token = generateJwt(newUser._id, newUser.role);
+        const token = generateJwt(newUser._id);
         res.status(201).json({ 
             message: "Регистрация прошла успешно.", 
             token,
@@ -50,7 +50,10 @@ export const login = async (req: Request, res: Response) => {
         if (!isPassValid) {
             return res.status(401).json({ message: "Неверный пароль." });
         }
-        const token = generateJwt(ID, user.role);
+        if (user.status == "inactive") {
+            return res.status(409).json({ message: "Ваш аккаунт заблокирован." });
+        }
+        const token = generateJwt(ID);
         res.status(201).json({
             message: "Авторизация прошла успешно.",
             token
