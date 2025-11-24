@@ -36,5 +36,5 @@ Node.js, Express.js, TypeScript, JWT (для аутентификации), bcry
 
 5. Блокировка пользователя  
    Метод: PATCH  
-   URL: http://localhost:3000/api/users/:id/block  
+   URL: http://localhost:3000/api/users/id/block  
    Заголовок: Authorization: Bearer <токен>  
